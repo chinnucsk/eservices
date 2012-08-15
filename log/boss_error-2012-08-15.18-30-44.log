@@ -1,0 +1,11 @@
+
+=INFO REPORT==== 15-Aug-2012::18:30:44 ===
+Starting Boss in development mode....
+
+=INFO REPORT==== 15-Aug-2012::18:30:44 ===
+Starting master services on eservices@defaceit
+
+=INFO REPORT==== 15-Aug-2012::18:30:44 ===
+    application: boss
+    exited: {shutdown,{boss_app,start,[normal,[]]}}
+    type: temporary

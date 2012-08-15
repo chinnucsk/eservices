@@ -1,0 +1,2 @@
+-module(stoplist, [Id, Ip, Key]).
+-compile(export_all).
