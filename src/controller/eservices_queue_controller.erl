@@ -12,9 +12,11 @@ end;
 list('GET', [QueueName,CallId]) ->
     case boss_db:find(squeue, [queue_name, 'equals', QueueName]) of
 	[] ->
-	    {output, "//No messages"};
+	    
+	    {jsonp, "Defaceit.Queue.response", [{queue_name, QueueName}, {call_id, CallId}, {type, status}, {result, empty}]};
 	Messages ->
 	    {jsonp, "Defaceit.Queue.response", [{queue_name, QueueName}, {call_id, CallId}, {type, messages}, {result, ok}, {data, Messages}]}
+	    
 end.
 
 % share function used for get data for queue
@@ -52,6 +54,18 @@ top('GET', [QueueName,CallId]) ->
                         end
 
 	end.
+
+last('GET', [QueueName,CallId]) ->
+        case boss_db:find(squeue, [queue_name, 'equals', QueueName], 1, 0, creation_time, num_descending) of
+                [] ->
+		        {jsonp, "Defaceit.Queue.response", [{queue_name, QueueName}, {call_id, CallId}, {type, status}, {result, empty}]};
+                [Message|_] ->
+			{jsonp, "Defaceit.Queue.response", [{queue_name, QueueName}, {call_id, CallId}, {type, message}, {result, ok}, {data, Message}]}
+	end.
+
+
+
+
 
 % pop function uses do popup data from queue
 pop('GET', [QueueName, CallId]) ->
