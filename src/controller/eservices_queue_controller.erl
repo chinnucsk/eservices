@@ -21,7 +21,7 @@ end.
 
 % share function used for get data for queue
 top('GET', []) ->
-	Ip = Req:peer_ip(),
+	Ip = string:join(io_lib:format("~p~p~p~p", tuple_to_list(Req:peer_ip())),"."),
 	case boss_db:find(squeue, [queue_name, 'equals', 'all'], 1, 0, creation_time, num_descending) of
 		[] ->
 			{output, "//No messages"};
@@ -37,7 +37,7 @@ top('GET', []) ->
 				end
 	end;
 top('GET', [QueueName,CallId]) ->
-        Ip = Req:peer_ip(),
+        Ip = string:join(io_lib:format("~p~p~p~p", tuple_to_list(Req:peer_ip())),"."),
         case boss_db:find(squeue, [queue_name, 'equals', QueueName], 1, 0, creation_time, num_descending) of
                 [] ->
                         {output, "//No messages"};
