@@ -63,7 +63,26 @@ last('GET', [QueueName,CallId]) ->
 			{jsonp, "Defaceit.Queue.response", [{queue_name, QueueName}, {call_id, CallId}, {type, message}, {result, ok}, {data, Message}]}
 	end.
 
+last_a('GET', []) ->
+	D = run(["content.article.test.babywonder.ru", "content.article.test.babywonder.ru", "title.article.test.babywonder.ru"]),
+	{jsonp, "Defaceit.Queue.response", [{'pack',D}]};
+last_a('POST', []) ->
+	D = run(r(Req:post_param("a[0]"), 1)),
+	{jsonp, "Defaceit.Queue.response", [{'pack',D}]}.
 
+run([]) ->
+	[];
+run([A|Tail]) ->
+	{_,_,B} = last('GET', [A, 1]),
+	run(Tail) ++ [B].
+
+
+
+
+r(undefined, _) ->
+	[];
+r(Element, Index) ->
+	[Element] ++ r(Req:post_param("a["++integer_to_list(Index)++"]"), Index+1).
 
 
 
