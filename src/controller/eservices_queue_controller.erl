@@ -70,6 +70,27 @@ last_a('POST', []) ->
 	D = run(r(Req:post_param("a[0]"), 1)),
 	{jsonp, "Defaceit.Queue.response", [{'pack',D}]}.
 
+last_n('GET', [QueueNamespace]) ->
+	case boss_db:find('squeue', [queue_name, 'matches', "*"++QueueNamespace]) of
+		[] ->
+			{jsonp, "Defaceit.Queue.response", [{'pack', []}]};
+		Messages ->
+			D = run(wrap(Messages)),
+			{jsonp, "Defaceit.Queue.response", [{'pack',D}]}
+	end.
+
+wrap([]) ->
+	[];
+wrap([Message|Tail]) ->
+	D = wrap(Tail),
+	case lists:member(Message:queue_name(), D) of
+		true ->
+			D;
+		_ ->
+			[Message:queue_name()] ++ D
+	end.
+
+
 run([]) ->
 	[];
 run([A|Tail]) ->
